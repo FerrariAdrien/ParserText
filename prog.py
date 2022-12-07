@@ -1,27 +1,67 @@
-fichier = open('/home/gadrew/Documents/corpus/CORPUS_TRAIN/fichier1.txt','r')
+import pathlib
+import os 
+import sys
 
-texte = fichier.readlines()
+#titre_doss = input('Choisir nom du dossier \n') 
 
-"""Vérifie si mot a une occurrence dans texte en position i"""
-B = True
-j = 0
-titre = False
+def recherche(fichier):
+	texte = fichier.readlines()
 
-trouver = False
-while (j < len(texte)):
-    v=j
-    while not trouver : 
-        print(texte[v])
-        if texte[v]=='\n' :
-            trouver = True
-        v+=1
-    if not texte[j].find("Abstract") :
+    #titre_doss.replace(" ","_")
+	#print(titre_doss)
 
-        n=j
-        while(texte[n]!='\n') :
-            print(texte[n])
-            n+=1
-        break
-    
-    j+=1
+	j = 0
+	trouver = False
+	trouverAuteur = False
+	esp = 0
+	while (j < len(texte)):
+		v=j
+		while not trouver :
+			print(texte[v],end=" ")
+			esp += texte[v].count(" ")
+			if ( texte[v]=='\n' or esp > 15 ) :
+				trouver = True
+			v+=1
+        #Nom auteur
+		while not trouverAuteur :
+			print(texte[v],end=" ")
+			if texte[v]=='\n' :
+				trouverAuteur = True
+			v+=1
+		if not texte[j].find("Abstract") :
 
+			n=j
+			while(texte[n]!='\n') :
+				print(texte[n],end=" ")
+				n+=1
+			break
+		
+		j+=1
+	print("\n\n")
+
+
+def main ():
+	init=0
+	for path in pathlib.Path(".").iterdir():
+		if path.is_file():
+			root, extension = os.path.splitext(path)
+			if (extension == '.txt'):
+					print (path)
+					fichier = open(path,'r')
+					recherche(fichier)
+			init+=1
+
+def test(argv,taille):
+	if ( taille < 2 ):
+		print("Argument manquant.")
+		return 1
+		
+	if ( argv[1] != "-t" and argv[1] != "-x" ) :
+		print("Argument non reconnu : ",argv[1]," (deux possibilitées : -t ou -x).")
+		return 1
+	return 0
+
+if __name__ == '__main__':
+	e = test(sys.argv,len(sys.argv))
+	if ( e == 0 ):
+		main();
