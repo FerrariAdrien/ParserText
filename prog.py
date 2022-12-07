@@ -1,7 +1,7 @@
 import sys
 
 def main(argv, taille):
-	if ( taille < 3 ):
+	if ( taille < 2 ):
 		print("Argument manquant.")
 		return 1
 		
@@ -9,7 +9,7 @@ def main(argv, taille):
 		print("Argument non reconnu : ",argv[1]," (deux possibilitées : -t ou -x).")
 		return 1
 		
-	fichier = open(argv[2],'r')
+	fichier = open("Nomfichier",'r')
 
 	texte = fichier.readlines()
 
