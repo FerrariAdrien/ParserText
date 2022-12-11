@@ -51,17 +51,7 @@ def main ():
 					recherche(fichier)
 			init+=1
 
-def test(argv,taille):
-	if ( taille < 2 ):
-		print("Argument manquant.")
-		return 1
-		
-	if ( argv[1] != "-t" and argv[1] != "-x" ) :
-		print("Argument non reconnu : ",argv[1]," (deux possibilitées : -t ou -x).")
-		return 1
-	return 0
+
 
 if __name__ == '__main__':
-	e = test(sys.argv,len(sys.argv))
-	if ( e == 0 ):
-		main();
+	main();
