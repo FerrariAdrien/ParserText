@@ -15,14 +15,33 @@ def recherche(fichier):
 	trouverAuteur = False
 	esp = 0
 	while (j < len(texte)):
-		v=j
-		while not trouver :
-			print(texte[v],end=" ")
-			esp += texte[v].count(" ")
-			if ( texte[v]=='\n' or esp > 15 or texte[v+1].find(",")) :
-				trouver = True
-				print('\n Auteur(s) :')
-			v+=1
+        #Titre 
+        i=0
+        trouver = False
+        while not trouver : 
+
+            if i>=1 :
+                if texte[i].find(',')!=-1 or texte[i].find('\ ')!=-1 or nbLigne>=2 or texte[i].find('Andrei')!=-1 or texte[i].find('Kevin')!=-1 or texte[i].find('Vincent')!=-1 :
+                    trouver = True
+                
+                else :
+                    if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' :
+                        i+=1
+                    else :
+                        print(texte[i])
+                        nbLigne+=1
+                        i+=1
+            else : 
+                if texte[i].find('\ ')!=-1 or nbLigne>=2 :
+                    trouver = True
+                
+                else :
+                    if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' or texte[i].find('From')!=-1:
+                        i+=1
+                    else :
+                        print(texte[i])
+                        nbLigne+=1
+                        i+=1
         #Nom auteur
 		while not trouverAuteur :
 			print(texte[v],end=" ")
@@ -31,8 +50,7 @@ def recherche(fichier):
 				trouverAuteur = True
 			v+=1
 		if not texte[j].find("Abstract") :
-
-			n=j
+            		n=j
 			while(texte[n]!='\n') :
 				print(texte[n],end=" ")
 				n+=1
