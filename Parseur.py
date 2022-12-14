@@ -15,42 +15,49 @@ def recherche(fichier):
 	trouverAuteur = False
 	esp = 0
 	while (j < len(texte)):
-        #Titre 
-        i=0
-        trouver = False
-        while not trouver : 
+		v=j
+		while not trouver :
+			#Titre 
+			i=0
+			nbLigne = 0
+			trouver = False
+			while not trouver : 
 
-            if i>=1 :
-                if texte[i].find(',')!=-1 or texte[i].find('\ ')!=-1 or nbLigne>=2 or texte[i].find('Andrei')!=-1 or texte[i].find('Kevin')!=-1 or texte[i].find('Vincent')!=-1 :
-                    trouver = True
-                
-                else :
-                    if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' :
-                        i+=1
-                    else :
-                        print(texte[i])
-                        nbLigne+=1
-                        i+=1
-            else : 
-                if texte[i].find('\ ')!=-1 or nbLigne>=2 :
-                    trouver = True
-                
-                else :
-                    if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' or texte[i].find('From')!=-1:
-                        i+=1
-                    else :
-                        print(texte[i])
-                        nbLigne+=1
-                        i+=1
-        #Nom auteur
+				if i>=1 :
+					if texte[i].find(',')!=-1 or texte[i].find('\ ')!=-1 or nbLigne>=2 or texte[i].find('Andrei')!=-1 or texte[i].find('Kevin')!=-1 or texte[i].find('Vincent')!=-1 :
+						trouver = True
+						print("Auteur(s) : ")
+					
+					else :
+						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' :
+							i+=1
+						else :
+							print(texte[i])
+							nbLigne+=1
+							i+=1
+				else : 
+					if texte[i].find('\ ')!=-1 or nbLigne>=2 :
+						trouver = True
+						print("Auteur(s) : ")
+					
+					else :
+						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' or texte[i].find('From')!=-1:
+							i+=1
+						else :
+							print(texte[i])
+							nbLigne+=1
+							i+=1
+		#Nom auteur
+		v=i
 		while not trouverAuteur :
-			print(texte[v],end=" ")
-			#print(texte[v+1],end=" ")
-			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].count(" ")!=2 and texte[v+1].find("University")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 :
+			if  texte[v+1].find("published")==-1:
+				print(texte[v],end=" ")
+			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=2 and texte[v+1].find("University")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
 		if not texte[j].find("Abstract") :
-            		n=j
+
+			n=j
 			while(texte[n]!='\n') :
 				print(texte[n],end=" ")
 				n+=1
