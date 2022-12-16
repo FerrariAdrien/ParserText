@@ -4,28 +4,15 @@ import sys
 
 #titre_doss = input('Choisir nom du dossier \n') 
 
-
-def xml(str,type,fichier) :
-    File = open(fichier ,  'un')
-    if (type.find("preamble")):
-        File.write("<article>")
-        File.write("<"+type+">"+str+"</"+type+">")
-    elif (type.find("biblio")) :
-        File.write("<"+type+">"+str+"</"+type+">")
-        File.write("</article>")
-    else :
-        File.write("<"+type+">"+str+"</"+type+">")
-
-      
-
-#titre_doss = input('Choisir nom du dossier \n') 
-
 def recherche(fichier):
 	texte = fichier.readlines()
 
     #titre_doss.replace(" ","_")
 	#print(titre_doss)
-    
+
+	titre = ""
+	auteur = ""
+	abstract = ""
 	j = 0
 	trouver = False
 	trouverAuteur = False
@@ -42,45 +29,46 @@ def recherche(fichier):
 				if i>=1 :
 					if texte[i].find(',')!=-1 or texte[i].find('\ ')!=-1 or nbLigne>=2 or texte[i].find('Andrei')!=-1 or texte[i].find('Kevin')!=-1 or texte[i].find('Vincent')!=-1 :
 						trouver = True
-						print("Auteur(s) : ")
 					
 					else :
 						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' :
 							i+=1
 						else :
-							print(texte[i])
+							titre += texte[v]
 							nbLigne+=1
 							i+=1
 				else : 
 					if texte[i].find('\ ')!=-1 or nbLigne>=2 :
 						trouver = True
-						print("Auteur(s) : ")
 					
 					else :
 						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' or texte[i].find('From')!=-1:
 							i+=1
 						else :
-							print(texte[i])
+							titre += texte[v]
 							nbLigne+=1
 							i+=1
 		#Nom auteur
 		v=i
 		while not trouverAuteur :
 			if  texte[v+1].find("published")==-1:
-				print(texte[v],end=" ")
-			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=2 and texte[v+1].find("University")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
+				auteur += texte[v]
+			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=1 and texte[v+1].find("University")==-1 and texte[v+1].find("Laboratory")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
-		if not texte[j].find("Abstract") :
+		#Abstract
+		if not (texte[j].find("Abstract") and texte[j].find("ABSTRACT")):
 
 			n=j
-			while(texte[n]!='\n') :
-				print(texte[n],end=" ")
+			nbLigne = 0
+			while( texte[n]!='\n' or nbLigne<=1) :
+				abstract += texte[n]
 				n+=1
+				nbLigne += 1
 			break
 		
 		j+=1
-	print("\n\n")
+	print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
 def main ():
@@ -89,7 +77,7 @@ def main ():
 		if path.is_file():
 			root, extension = os.path.splitext(path)
 			if (extension == '.txt'):
-					print (path)
+					#print (path)
 					fichier = open(path,'r')
 					recherche(fichier)
 			init+=1
