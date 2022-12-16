@@ -52,7 +52,7 @@ def recherche(fichier):
 		v=i
 		while not trouverAuteur :
 			if  texte[v+1].find("published")==-1:
-				auteur += texte[v]
+				if not texte[v]=='\n' : auteur += texte[v]
 			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=1 and texte[v+1].find("University")==-1 and texte[v+1].find("Laboratory")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
