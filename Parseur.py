@@ -4,12 +4,28 @@ import sys
 
 #titre_doss = input('Choisir nom du dossier \n') 
 
+
+def xml(str,type,fichier) :
+    File = open(fichier ,  'un')
+    if (type.find("preamble")):
+        File.write("<article>")
+        File.write("<"+type+">"+str+"</"+type+">")
+    elif (type.find("biblio")) :
+        File.write("<"+type+">"+str+"</"+type+">")
+        File.write("</article>")
+    else :
+        File.write("<"+type+">"+str+"</"+type+">")
+
+      
+
+#titre_doss = input('Choisir nom du dossier \n') 
+
 def recherche(fichier):
 	texte = fichier.readlines()
 
     #titre_doss.replace(" ","_")
 	#print(titre_doss)
-
+    
 	j = 0
 	trouver = False
 	trouverAuteur = False
