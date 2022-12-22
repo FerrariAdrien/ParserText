@@ -12,7 +12,19 @@ import sys
 
 
 def xml(titre,preamble,auteur,abstract,biblio,fichier) :
-    #File = open(fichier,  'w+')
+    File = open(titre+".xml",  'w+')
+    
+    File.write("<?xml version='1.0' standalone='yes' ?>");
+    File.write("<article>");
+    File.write("<preamble>"+preamble+"</preamble>");
+    File.write("<titre>"+titre+"</titre>");
+    File.write("<auteur>"+auteur+"</auteur>");
+    File.write("<abstract>"+abstract+"</abstract>");
+    File.write("<biblio>"+biblio+"</biblio>");
+    File.write("</article>");
+    
+    File.close();
+    
     print("<article>")
     print("<preamble>"+preamble+"</preamble>")
     print("<titre>"+titre+"</titre>")
@@ -88,7 +100,7 @@ def recherche(fichier,path):
 				n+=1
 				nbLigne += 1
 
-		if not texte[j].find("References") or not texte[j].find("REFERENCES") or not texte[j].find("R EFERENCES"):
+		if not texte[j].find("References") and texte[j].find("REFERENCES"):
 			while (j<len(texte)) :
 				if not texte[v]=='\n' : biblio+=texte[j]
 				j+=1
