@@ -12,7 +12,7 @@ import sys
 
 
 def xml(titre,preamble,auteur,abstract,biblio,fichier) :
-    File = open(titre+".xml",  'w+')
+    File = open(preamble+".xml",  'w+')
     
     File.write("<?xml version='1.0' standalone='yes' ?>");
     File.write("<article>");
@@ -33,11 +33,30 @@ def xml(titre,preamble,auteur,abstract,biblio,fichier) :
     print("<biblio>"+biblio+"</biblio>")
     print("</article>")
 
+def txt(titre,preamble,auteur,abstract,biblio,fichier) :
+    File = open(preamble+".txt",  'w+')
+    
+
+    File.write(preamble+"\n\n");
+    File.write(titre+"\n\n");
+    File.write(auteur+"\n\n");
+    File.write(abstract+"\n\n");
+    File.write(biblio+"\n\n");
+    
+    File.close();
+    
+    print(preamble+"\n\n")
+    print(titre+"\n\n")
+    print(auteur+"\n\n")
+    print(abstract+"\n\n")
+    print(biblio+"\n\n")
+
+
       
 
 #titre_doss = input('Choisir nom du dossier \n') 
 
-def recherche(fichier,path):
+def recherche(fichier,path,type_fich):
 	texte = fichier.readlines()
 
     #titre_doss.replace(" ","_")
@@ -109,11 +128,14 @@ def recherche(fichier,path):
 				j+=1
 			#break
 		j+=1
-	xml(titre,str(tail),auteur,abstract,biblio,path)
+	if (type_fich == "-x" ) :
+		xml(titre,str(tail),auteur,abstract,biblio,path)
+	else :
+		txt(titre,str(tail),auteur,abstract,biblio,path)
 	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
-def main ():
+def main (type_fich):
 	init=0
 	for path in pathlib.Path("txt/.").iterdir():
 		if path.is_file():
@@ -121,7 +143,7 @@ def main ():
 			if (extension == '.txt'):
 					print (path)
 					fichier = open(path,'r')
-					recherche(fichier,path)
+					recherche(fichier,path,type_fich)
 			init+=1
 
 def test(argv,taille):
@@ -137,4 +159,4 @@ def test(argv,taille):
 if __name__ == '__main__':
 	e = test(sys.argv,len(sys.argv))
 	if ( e == 0 ):
-		main();
+		main(sys.argv[1]);
