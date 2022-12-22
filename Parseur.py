@@ -3,7 +3,17 @@ import os
 import sys
 
 #titre_doss = input('Choisir nom du dossier \n') 
+def xml(titre,preamble,auteur,abstract,biblio,fichier) :
+    #File = open(fichier,  'w+')
+    print("<article>")
+    print("<preamble>"+preamble+"</preamble>")
+    print("<titre>"+titre+"</titre>")
+    print("<auteur>"+auteur+"</auteur>")
+    print("<abstract>"+abstract+"</abstract>")
+    print("<biblio>"+biblio+"</biblio>")
+    print("</article>")
 
+ 
 def recherche(fichier):
 	texte = fichier.readlines()
 
@@ -65,9 +75,15 @@ def recherche(fichier):
 				abstract += texte[n]
 				n+=1
 				nbLigne += 1
-			break
+				
+		if not texte[j].find("References") and texte[j].find("REFERENCES"):
+			while (j<len(texte)) :
+				if not texte[v]=='\n' : biblio+=texte[j]
+				j+=1
+			#break
 		
 		j+=1
+	xml(titre,"fichier.txt",auteur,abstract,biblio,path)
 	print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
