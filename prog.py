@@ -47,6 +47,8 @@ def recherche(fichier,path):
 	auteur = ""
 	abstract = ""
 	biblio = ""
+	head, tail = os.path.split(path)
+	
 	j = 0
 	trouver = False
 	trouverAuteur = False
@@ -106,7 +108,7 @@ def recherche(fichier,path):
 				j+=1
 			#break
 		j+=1
-	xml(titre,"fichier.txt",auteur,abstract,biblio,path)
+	xml(titre,str(tail),auteur,abstract,biblio,path)
 	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
