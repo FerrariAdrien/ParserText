@@ -2,14 +2,39 @@ import pathlib
 import os 
 import sys
 
+
+#Vérifie si mot a une occurrence dans texte en position i
+
+
+
+
 #titre_doss = input('Choisir nom du dossier \n') 
 
-def recherche(fichier):
+
+def xml(titre,preamble,auteur,abstract,biblio,fichier) :
+    #File = open(fichier,  'w+')
+    print("<article>")
+    print("<preamble>"+preamble+"</preamble>")
+    print("<titre>"+titre+"</titre>")
+    print("<auteur>"+auteur+"</auteur>")
+    print("<abstract>"+abstract+"</abstract>")
+    print("<biblio>"+biblio+"</biblio>")
+    print("</article>")
+
+      
+
+#titre_doss = input('Choisir nom du dossier \n') 
+
+def recherche(fichier,path):
 	texte = fichier.readlines()
 
     #titre_doss.replace(" ","_")
 	#print(titre_doss)
 
+	titre = ""
+	auteur = ""
+	abstract = ""
+	biblio = ""
 	j = 0
 	trouver = False
 	trouverAuteur = False
@@ -17,38 +42,71 @@ def recherche(fichier):
 	while (j < len(texte)):
 		v=j
 		while not trouver :
-			print(texte[v],end=" ")
-			esp += texte[v].count(" ")
-			if ( texte[v]=='\n' or esp > 15 ) :
-				trouver = True
-			v+=1
-        #Nom auteur
+			#Titre 
+			i=0
+			nbLigne = 0
+			trouver = False
+			while not trouver : 
+
+				if i>=1 :
+					if texte[i].find(',')!=-1 or texte[i].find('\ ')!=-1 or nbLigne>=2 or texte[i].find('Andrei')!=-1 or texte[i].find('Kevin')!=-1 or texte[i].find('Vincent')!=-1 :
+						trouver = True
+					
+					else :
+						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' :
+							i+=1
+						else :
+							if not texte[v]=='\n' : titre += texte[v]
+							nbLigne+=1
+							i+=1
+				else : 
+					if texte[i].find('\ ')!=-1 or nbLigne>=2 :
+						trouver = True
+					
+					else :
+						if texte[i].find('Submit')!=-1 or texte[i].find('Journal')!=-1 or texte[i]=='\n' or texte[i].find('From')!=-1:
+							i+=1
+						else :
+							titre += texte[v]
+							nbLigne+=1
+							i+=1
+		#Nom auteur
+		v=i
 		while not trouverAuteur :
-			print(texte[v],end=" ")
-			if texte[v]=='\n' :
+			if  texte[v+1].find("published")==-1:
+				if not texte[v]=='\n' : auteur += texte[v]
+			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=1 and texte[v+1].find("University")==-1 and texte[v+1].find("Laboratory")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
-		if not texte[j].find("Abstract") :
-
+		#Abstract
+		if not (texte[j].find("Abstract") and texte[j].find("ABSTRACT")):
+	
 			n=j
-			while(texte[n]!='\n') :
-				print(texte[n],end=" ")
+			nbLigne = 0
+			while( texte[n]!='\n' or nbLigne<=1) :
+				abstract += texte[n]
 				n+=1
-			break
-		
+				nbLigne += 1
+
+		if not texte[j].find("References") and texte[j].find("REFERENCES"):
+			while (j<len(texte)) :
+				if not texte[v]=='\n' : biblio+=texte[j]
+				j+=1
+			#break
 		j+=1
-	print("\n\n")
+	xml(titre,"fichier.txt",auteur,abstract,biblio,path)
+	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
 def main ():
 	init=0
-	for path in pathlib.Path(".").iterdir():
+	for path in pathlib.Path("txt/.").iterdir():
 		if path.is_file():
 			root, extension = os.path.splitext(path)
 			if (extension == '.txt'):
 					print (path)
 					fichier = open(path,'r')
-					recherche(fichier)
+					recherche(fichier,path)
 			init+=1
 
 def test(argv,taille):
