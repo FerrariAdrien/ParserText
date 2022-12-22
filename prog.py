@@ -11,29 +11,30 @@ import sys
 #titre_doss = input('Choisir nom du dossier \n') 
 
 
-def xml(titre,preamble,auteur,abstract,biblio,fichier) :
+def xml(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
     File = open(preamble+".xml",  'w+')
     
-    File.write("<?xml version='1.0' standalone='yes' ?>");
-    File.write("<article>");
-    File.write("<preamble>"+preamble+"</preamble>");
-    File.write("<titre>"+titre+"</titre>");
-    File.write("<auteur>"+auteur+"</auteur>");
-    File.write("<abstract>"+abstract+"</abstract>");
-    File.write("<biblio>"+biblio+"</biblio>");
-    File.write("</article>");
+    File.write("<?xml version='1.0' standalone='yes' ?>\n");
+    File.write("<article>\n");
+    File.write("<preamble>"+preamble+"</preamble>\n");
+    File.write("<titre>"+titre+"</titre>\n");
+    File.write("<auteur>"+auteur+"</auteur>\n");
+    File.write("<abstract>"+abstract+"</abstract>\n");
+    File.write("<biblio>"+biblio+"</biblio>\n");
+    File.write("<conclusion>"+conclusion+"</conclusion>\n");
+    File.write("</article>\n");
     
     File.close();
     
-    print("<article>")
-    print("<preamble>"+preamble+"</preamble>")
-    print("<titre>"+titre+"</titre>")
-    print("<auteur>"+auteur+"</auteur>")
-    print("<abstract>"+abstract+"</abstract>")
-    print("<biblio>"+biblio+"</biblio>")
-    print("</article>")
+    #print("<article>")
+    #print("<preamble>"+preamble+"</preamble>")
+    #print("<titre>"+titre+"</titre>")
+    #print("<auteur>"+auteur+"</auteur>")
+    #print("<abstract>"+abstract+"</abstract>")
+    #print("<biblio>"+biblio+"</biblio>")
+    #print("</article>")
 
-def txt(titre,preamble,auteur,abstract,biblio,fichier) :
+def txt(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
     File = open(preamble+".txt",  'w+')
     
 
@@ -42,14 +43,16 @@ def txt(titre,preamble,auteur,abstract,biblio,fichier) :
     File.write(auteur+"\n\n");
     File.write(abstract+"\n\n");
     File.write(biblio+"\n\n");
+    File.write(conclusion+"\n\n");
     
     File.close();
     
-    print(preamble+"\n\n")
-    print(titre+"\n\n")
-    print(auteur+"\n\n")
-    print(abstract+"\n\n")
-    print(biblio+"\n\n")
+    #print(preamble+"\n\n")
+    #print(titre+"\n\n")
+    #print(auteur+"\n\n")
+    #print(abstract+"\n\n")
+    #print(biblio+"\n\n")
+    #print(conclusion+"\n\n")
 
 
       
@@ -66,12 +69,14 @@ def recherche(fichier,path,type_fich):
 	auteur = ""
 	abstract = ""
 	biblio = ""
+	conclusion = ""
 	head, tail = os.path.split(path)
 	tail='.'.join(tail.split('.')[:-1])
 	
 	j = 0
 	trouver = False
 	trouverAuteur = False
+	trouverConclusion = False
 	esp = 0
 	while (j < len(texte)):
 		v=j
@@ -112,6 +117,7 @@ def recherche(fichier,path,type_fich):
 			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=1 and texte[v+1].find("University")==-1 and texte[v+1].find("Laboratory")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
+			
 		#Abstract
 		if not (texte[j].find("Abstract") and texte[j].find("ABSTRACT")):
 	
@@ -121,18 +127,30 @@ def recherche(fichier,path,type_fich):
 				abstract += texte[n]
 				n+=1
 				nbLigne += 1
-
+		
+		#Conclusion
+		if ( texte[j].find('Conclusion')!=-1 or texte[j].find('Conclusions')!=-1 or texte[j].find('C ONCLUSIONS')!=-1 or texte[j].find('CONCLUSIONS')!=-1) :
+			t = j
+			while not trouverConclusion and t<len(texte) :
+				print(texte[t])
+				conclusion += texte[t]
+				t += 1
+				if ( texte[t].find('Acknowledgments')!=-1 or texte[t].find('References')!=-1 or texte[t].find('ACKNOWLEDGMENT')!=-1 or texte[t].find('D ISCUSSION')!=-1 or texte[t].find('DISCUSSION')!=-1 or texte[t].find('Discution')!=-1 ) :
+					trouverConclusion = True
+				
+				
+		#reference
 		if not texte[j].find("References") and texte[j].find("REFERENCES"):
 			while (j<len(texte)) :
 				if not texte[v]=='\n' : biblio+=texte[j]
 				j+=1
-			#break
+				
 		j+=1
 	if (type_fich == "-x" ) :
-		xml(titre,str(tail),auteur,abstract,biblio,path)
+		xml(titre,str(tail),auteur,abstract,biblio,conclusion,path)
 	else :
-		txt(titre,str(tail),auteur,abstract,biblio,path)
-	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
+		txt(titre,str(tail),auteur,abstract,biblio,conclusion,path)
+	print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract,"-----------Conclusion-----------\n",conclusion)
 
 
 def main (type_fich):
