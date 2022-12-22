@@ -88,7 +88,7 @@ def recherche(fichier,path):
 				n+=1
 				nbLigne += 1
 
-		if not texte[j].find("References") and texte[j].find("REFERENCES"):
+		if not texte[j].find("References") or not texte[j].find("REFERENCES") or not texte[j].find("R EFERENCES"):
 			while (j<len(texte)) :
 				if not texte[v]=='\n' : biblio+=texte[j]
 				j+=1
