@@ -10,8 +10,8 @@ import sys
 
 #titre_doss = input('Choisir nom du dossier \n') 
 
-
-def xml(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
+	#ajout acknow
+def xml(titre,preamble,auteur,abstract,acknowledgments,biblio,conclusion,fichier) :
     File = open(preamble+".xml",  'w+')
     
     File.write("<?xml version='1.0' standalone='yes' ?>\n");
@@ -20,6 +20,8 @@ def xml(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
     File.write("<titre>"+titre+"</titre>\n");
     File.write("<auteur>"+auteur+"</auteur>\n");
     File.write("<abstract>"+abstract+"</abstract>\n");
+	#ajout acknow
+    File.write("<acknowledgments>"+acknowledgments+"</acknowledgments>\n");
     File.write("<biblio>"+biblio+"</biblio>\n");
     File.write("<conclusion>"+conclusion+"</conclusion>\n");
     File.write("</article>\n");
@@ -34,7 +36,8 @@ def xml(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
     #print("<biblio>"+biblio+"</biblio>")
     #print("</article>")
 
-def txt(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
+	#ajout acknow
+def txt(titre,preamble,auteur,abstract,acknowledgments,biblio,conclusion,fichier) :
     File = open(preamble+".txt",  'w+')
     
 
@@ -42,6 +45,8 @@ def txt(titre,preamble,auteur,abstract,biblio,conclusion,fichier) :
     File.write(titre+"\n\n");
     File.write(auteur+"\n\n");
     File.write(abstract+"\n\n");
+	#ajout acknow
+    File.write(acknowledgments+"\n\n);
     File.write(biblio+"\n\n");
     File.write(conclusion+"\n\n");
     
@@ -77,6 +82,8 @@ def recherche(fichier,path,type_fich):
 	trouver = False
 	trouverAuteur = False
 	trouverConclusion = False
+	       #ajout acknow
+	trouverAcknowledgment = False
 	esp = 0
 	while (j < len(texte)):
 		v=j
@@ -137,6 +144,15 @@ def recherche(fichier,path,type_fich):
 				t += 1
 				if ( texte[t].find('Acknowledgments')!=-1 or texte[t].find('References')!=-1 or texte[t].find('ACKNOWLEDGMENT')!=-1 or texte[t].find('D ISCUSSION')!=-1 or texte[t].find('DISCUSSION')!=-1 or texte[t].find('Discution')!=-1 ) :
 					trouverConclusion = True
+	       
+	       #Acknowledgments
+	       if not texte[j].find("ACKNOWLEDGMENT") or not texte[j].find("ACKNOWLEDGMENTS") or not texte[j].find("Acknowledgments") or not texte[j].find("5 Acknowledgements") or not texte[j].find("Acknowledgements"):
+			ack = j
+			while(not trouverAcknowledgment):
+				if ack<len(texte) and (not texte[ack+1].find("References") or not texte[ack+1].find("REFERENCES") or not texte[ack+1].find("R EFERENCES")):
+					trouverAcknowledgment = True
+				acknowledgments+=texte[ack]
+				ack+=1
 				
 				
 		#reference
@@ -147,9 +163,10 @@ def recherche(fichier,path,type_fich):
 				
 		j+=1
 	if (type_fich == "-x" ) :
-		xml(titre,str(tail),auteur,abstract,biblio,conclusion,path)
+	       	#ajout acknow pour les 2
+		xml(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
 	else :
-		txt(titre,str(tail),auteur,abstract,biblio,conclusion,path)
+		txt(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
 	print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract,"-----------Conclusion-----------\n",conclusion)
 
 
