@@ -48,6 +48,7 @@ def recherche(fichier,path):
 	abstract = ""
 	biblio = ""
 	head, tail = os.path.split(path)
+	tail='.'.join(tail.split('.')[:-1])
 	
 	j = 0
 	trouver = False
