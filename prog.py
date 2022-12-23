@@ -46,7 +46,7 @@ def txt(titre,preamble,auteur,abstract,acknowledgments,biblio,conclusion,fichier
     File.write(auteur+"\n\n");
     File.write(abstract+"\n\n");
 	#ajout acknow
-    File.write(acknowledgments+"\n\n);
+    File.write(acknowledgments+"\n\n");
     File.write(biblio+"\n\n");
     File.write(conclusion+"\n\n");
     
@@ -75,6 +75,7 @@ def recherche(fichier,path,type_fich):
 	abstract = ""
 	biblio = ""
 	conclusion = ""
+	acknowledgments = ""
 	head, tail = os.path.split(path)
 	tail='.'.join(tail.split('.')[:-1])
 	
@@ -139,14 +140,14 @@ def recherche(fichier,path,type_fich):
 		if ( texte[j].find('Conclusion')!=-1 or texte[j].find('Conclusions')!=-1 or texte[j].find('C ONCLUSIONS')!=-1 or texte[j].find('CONCLUSIONS')!=-1) :
 			t = j
 			while not trouverConclusion and t<len(texte) :
-				print(texte[t])
+				#print(texte[t])
 				conclusion += texte[t]
 				t += 1
-				if ( texte[t].find('Acknowledgments')!=-1 or texte[t].find('References')!=-1 or texte[t].find('ACKNOWLEDGMENT')!=-1 or texte[t].find('D ISCUSSION')!=-1 or texte[t].find('DISCUSSION')!=-1 or texte[t].find('Discution')!=-1 ) :
+				if ( texte[t].find('Acknowledgments')!=-1 or texte[t].find('Acknowledgements')!=-1 or texte[t].find('References')!=-1 or texte[t].find('ACKNOWLEDGMENT')!=-1 or texte[t].find('D ISCUSSION')!=-1 or texte[t].find('DISCUSSION')!=-1 or texte[t].find('Discution')!=-1 ) :
 					trouverConclusion = True
 	       
-	       #Acknowledgments
-	       if not texte[j].find("ACKNOWLEDGMENT") or not texte[j].find("ACKNOWLEDGMENTS") or not texte[j].find("Acknowledgments") or not texte[j].find("5 Acknowledgements") or not texte[j].find("Acknowledgements"):
+		#Acknowledgments
+		if not texte[j].find("ACKNOWLEDGMENT") or not texte[j].find("ACKNOWLEDGMENTS") or not texte[j].find("Acknowledgments") or not texte[j].find("5 Acknowledgements") or not texte[j].find("Acknowledgements"):
 			ack = j
 			while(not trouverAcknowledgment):
 				if ack<len(texte) and (not texte[ack+1].find("References") or not texte[ack+1].find("REFERENCES") or not texte[ack+1].find("R EFERENCES")):
@@ -167,7 +168,8 @@ def recherche(fichier,path,type_fich):
 		xml(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
 	else :
 		txt(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
-	print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract,"-----------Conclusion-----------\n",conclusion)
+	# print test
+	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract,"-----------Conclusion-----------\n",conclusion)
 
 
 def main (type_fich):
@@ -176,9 +178,15 @@ def main (type_fich):
 		if path.is_file():
 			root, extension = os.path.splitext(path)
 			if (extension == '.txt'):
-					print (path)
-					fichier = open(path,'r')
-					recherche(fichier,path,type_fich)
+					#print (path)
+					reponse = ""
+					while ( reponse != "y" and reponse != "n") :
+						tail = os.path.split(path)
+						print("Voulez vous parser le fichier ",tail[1]," (y/n)")
+						reponse = input()
+						if ( reponse == "y" ) :
+							fichier = open(path,'r')
+							recherche(fichier,path,type_fich)
 			init+=1
 
 def test(argv,taille):
