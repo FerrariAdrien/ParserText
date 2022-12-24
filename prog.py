@@ -9,56 +9,61 @@ import sys
 
 
 #titre_doss = input('Choisir nom du dossier \n') 
-
-	#ajout acknow
-def xml(titre,preamble,auteur,abstract,acknowledgments,biblio,conclusion,fichier) :
-    File = open(preamble+".xml",  'w+')
-    
-    File.write("<?xml version='1.0' standalone='yes' ?>\n");
-    File.write("<article>\n");
-    File.write("<preamble>"+preamble+"</preamble>\n");
-    File.write("<titre>"+titre+"</titre>\n");
-    File.write("<auteur>"+auteur+"</auteur>\n");
-    File.write("<abstract>"+abstract+"</abstract>\n");
-	#ajout acknow
-    File.write("<acknowledgments>"+acknowledgments+"</acknowledgments>\n");
-    File.write("<biblio>"+biblio+"</biblio>\n");
-    File.write("<conclusion>"+conclusion+"</conclusion>\n");
-    File.write("</article>\n");
-    
-    File.close();
-    
-    #print("<article>")
-    #print("<preamble>"+preamble+"</preamble>")
-    #print("<titre>"+titre+"</titre>")
-    #print("<auteur>"+auteur+"</auteur>")
-    #print("<abstract>"+abstract+"</abstract>")
-    #print("<biblio>"+biblio+"</biblio>")
-    #print("</article>")
-
-	#ajout acknow
-def txt(titre,preamble,auteur,abstract,acknowledgments,biblio,conclusion,fichier) :
+def txt(titre,preamble,auteur,abstract,biblio,fichier,intro,corps,conclusion,discussion) :
     File = open(preamble+".txt",  'w+')
-    
+
 
     File.write(preamble+"\n\n");
     File.write(titre+"\n\n");
     File.write(auteur+"\n\n");
     File.write(abstract+"\n\n");
-	#ajout acknow
-    File.write(acknowledgments+"\n\n");
-    File.write(biblio+"\n\n");
+    File.write(intro+"\n\n");
+    File.write(corps+"\n\n");
     File.write(conclusion+"\n\n");
-    
-    File.close();
-    
-    #print(preamble+"\n\n")
-    #print(titre+"\n\n")
-    #print(auteur+"\n\n")
-    #print(abstract+"\n\n")
-    #print(biblio+"\n\n")
-    #print(conclusion+"\n\n")
+    File.write(discussion+"\n\n");
+    File.write(biblio+"\n\n");
 
+    File.close();
+
+    print(preamble+"\n\n")
+    print(titre+"\n\n")
+    print(auteur+"\n\n")
+    print(abstract+"\n\n")
+    print(intro+"\n\n")
+    print(corps+"\n\n")
+    print(conclusion+"\n\n")
+    print(discussion+"\n\n")
+    print(biblio+"\n\n")
+
+def xml(titre,preamble,auteur,abstract,biblio,fichier,intro,corps,conclusion,discussion) :
+    #File = open(fichier,  'w+')
+
+	File = open(preamble+".xml",  'w+')
+	File.write("<?xml version='1.0' standalone='yes' ?>");
+	File.write("<article>\n");
+	File.write("<preamble>"+preamble+"</preamble>\n");
+	File.write("<titre>"+titre+"</titre>\n");
+	File.write("<auteur>"+auteur+"</auteur>\n");
+	File.write("<abstract>"+abstract+"</abstract>\n");
+	File.write("<introduction>"+intro+"</introduction>\n");
+	File.write("<corps>"+corps+"</corps>\n");
+	File.write("<conclusion>"+corps+"</conclusion>\n");
+	File.write("<discussion>"+discussion+"</discussion>\n");
+	File.write("<biblio>"+biblio+"</biblio>\n");
+	File.write("</article>\n");
+	File.close();
+	"""
+	    print("<article>")
+    print("<preamble>"+preamble+"</preamble>")
+    print("<titre>"+titre+"</titre>")
+    print("<auteur>"+auteur+"</auteur>")
+    print("<abstract>"+abstract+"</abstract>")
+    print("<biblio>"+biblio+"</biblio>")
+    print("</article>")
+
+	
+	
+	"""
 
       
 
@@ -69,23 +74,23 @@ def recherche(fichier,path,type_fich):
 
     #titre_doss.replace(" ","_")
 	#print(titre_doss)
-
+	type = ''
+	corps=""
 	titre = ""
 	auteur = ""
 	abstract = ""
 	biblio = ""
-	conclusion = ""
-	acknowledgments = ""
+	intro =""
+	discussion = ""
+	conclusion =""
 	head, tail = os.path.split(path)
-	tail='.'.join(tail.split('.')[:-1])
-	
+	trouverIntro = False
 	j = 0
 	trouver = False
 	trouverAuteur = False
-	trouverConclusion = False
-	       #ajout acknow
-	trouverAcknowledgment = False
-	esp = 0
+	trouverCorps = False
+	trouverD = False
+	trouverC = False
 	while (j < len(texte)):
 		v=j
 		while not trouver :
@@ -125,7 +130,6 @@ def recherche(fichier,path,type_fich):
 			if (texte[v]=='\n' and texte[v+1].find("@")==-1  and texte[v+1].find("\,")==-1 and texte[v+1].find("\ ")==-1 and texte[v+1].count(" ")!=1 and texte[v+1].find("University")==-1 and texte[v+1].find("Laboratory")==-1 and texte[v+1].find("School")==-1) or texte[v+1].find("Abstract")!=-1 or texte[v+1].find("Introduction")!=-1 :
 				trouverAuteur = True
 			v+=1
-			
 		#Abstract
 		if not (texte[j].find("Abstract") and texte[j].find("ABSTRACT")):
 	
@@ -135,49 +139,125 @@ def recherche(fichier,path,type_fich):
 				abstract += texte[n]
 				n+=1
 				nbLigne += 1
+		#intro
+		if texte[j].find("Introduction")!=-1 or texte[j].find("introduction")!=-1 or texte[j].find("INTRODUCTION")!=-1 or texte[j].find("I NTRODUCTION")!=-1:
+			d=j
+			
+			d+=1
+			
+			while(not trouverIntro) :
+				if texte[d].startswith("2") and len(texte[d])==2 and len(texte[d+2].split(' '))<7:
+				
+					trouverIntro = True
+				elif texte[d].startswith("II.") :
+					trouverIntro = True
+				elif texte[d].startswith("2") and len(texte[d])==3 and len(texte[d+2].split(' '))<7 :
+					trouverIntro = True
+				elif texte[d].find('Method')!=-1 :
+					
+					trouverIntro = True
+				elif texte[d].startswith("2") and len(texte)==1:
+					trouverIntro = True
+				elif texte[d].find("2. ")!=-1 :
+					trouverIntro=True
+				elif texte[d].startswith("2 "):
+					trouverIntro=True
+				elif texte[d].find("II.")!=-1 :
+					trouverIntro=True
+				else :
+					intro+=texte[d]
+					#print(texte[d])
+					d+=1
+			j=d
+		#corps
 		
-		#Conclusion
-		if ( texte[j].find('Conclusion')!=-1 or texte[j].find('Conclusions')!=-1 or texte[j].find('C ONCLUSIONS')!=-1 or texte[j].find('CONCLUSIONS')!=-1) :
-			t = j
-			while not trouverConclusion and t<len(texte) :
-				#print(texte[t])
-				conclusion += texte[t]
-				t += 1
-				if ( texte[t].find('Acknowledgments')!=-1 or texte[t].find('Acknowledgements')!=-1 or texte[t].find('References')!=-1 or texte[t].find('ACKNOWLEDGMENT')!=-1 or texte[t].find('D ISCUSSION')!=-1 or texte[t].find('DISCUSSION')!=-1 or texte[t].find('Discution')!=-1 ) :
-					trouverConclusion = True
-	       
-		#Acknowledgments
-		if not texte[j].find("ACKNOWLEDGMENT") or not texte[j].find("ACKNOWLEDGMENTS") or not texte[j].find("Acknowledgments") or not texte[j].find("5 Acknowledgements") or not texte[j].find("Acknowledgements"):
-			ack = j
-			while(not trouverAcknowledgment):
-				if ack<len(texte) and (not texte[ack+1].find("References") or not texte[ack+1].find("REFERENCES") or not texte[ack+1].find("R EFERENCES")):
-					trouverAcknowledgment = True
-				acknowledgments+=texte[ack]
-				ack+=1
-				
-				
-		#reference
+		if trouver and trouverIntro and trouverAuteur :
+			v=j
+			while not trouverCorps:
+
+				if texte[v].find("Conclusion")!=-1 or texte[v].find("CONCLUSIONS")!=-1 or texte[v].find("C ONCLUSIONS")!=-1:
+					print("c")
+					type = 'c'
+					trouverCorps = True
+				elif texte[v].find("Discussion")!=-1 and len(texte[v].split(' '))<3:
+					print("d")
+					type = 'd'
+					trouverCorps = True 
+				elif texte[v].find("D ISCUSSION")!=-1 :
+					trouverCorps = True
+					type = 'd'
+				elif texte[v].find("Discussion and")!=-1 :
+					print("D a")
+					type = 'd'
+					trouverCorps = True
+				elif texte[v].find("References")!=-1 and len(texte[v].split(' '))<5:
+					print("R")
+					
+					trouverCorps = True
+
+				else :
+					#print(texte[v])
+					corps+=texte[v]
+				v+=1
+			
+			j=v
+
+		if type == 'd' and not trouverD :
+			
+			c=j
+			while not trouverD :
+				if texte[c].find("Acknowledgements")!=-1 or texte[c].find("Acknowledgments")!=-1 or texte[c].find("ACKNOWLEDGMENT")!=-1:
+					trouverD = True
+				elif texte[c].find("Conclusions")!=-1 or texte[c].find("Conclusion")!=-1 : 
+					trouverD = True
+				else :
+					#print(texte[c])
+					discussion+=texte[c]
+				c+=1
+		elif type =='c' and not trouverC:
+			c=j
+			
+			while not trouverC:
+				if texte[c].find("Acknowledgements")!=-1 or texte[c].find("Acknowledgments")!=-1:
+					trouverC = True
+				elif texte[c].find("Conclusion")!=-1 :
+					trouverC = True
+				elif texte[c].find("Reference")!=-1 :
+					trouverC = True
+				elif texte[c].find("D ISCUSSION")!=-1 :
+					trouverC = True
+					type='d'
+				else :
+					#print(texte[c])
+					conclusion+=texte[c]
+				c+=1
 		if not texte[j].find("References") and texte[j].find("REFERENCES"):
 			while (j<len(texte)) :
 				if not texte[v]=='\n' : biblio+=texte[j]
 				j+=1
-				
+
+
+
 		j+=1
+
 	if (type_fich == "-x" ) :
-	       	#ajout acknow pour les 2
-		xml(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
+		xml(titre,str(tail),auteur,abstract,biblio,path,intro,corps,conclusion,discussion)
 	else :
-		txt(titre,str(tail),auteur,abstract,acknowledgments,biblio,conclusion,path)
-	# print test
-	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract,"-----------Conclusion-----------\n",conclusion)
+		txt(titre,str(tail),auteur,abstract,biblio,path,intro,corps,conclusion,discussion)
+	#print("-----------Titre-----------\n",titre,"-----------Auteur-----------\n",auteur,"-----------Abstract-----------\n",abstract)
 
 
 def main (type_fich):
 	init=0
+	"""	path = "txt/Torres.txt"
+	fichier = open(path,'r')
+	recherche(fichier,path)
+	"""
 	for path in pathlib.Path("txt/.").iterdir():
 		if path.is_file():
 			root, extension = os.path.splitext(path)
 			if (extension == '.txt'):
+					print (path)
 					#print (path)
 					reponse = ""
 					while ( reponse != "y" and reponse != "n") :
@@ -188,7 +268,7 @@ def main (type_fich):
 							fichier = open(path,'r')
 							recherche(fichier,path,type_fich)
 			init+=1
-
+	
 def test(argv,taille):
 	if ( taille < 2 ):
 		print("Argument manquant.")
@@ -203,3 +283,13 @@ if __name__ == '__main__':
 	e = test(sys.argv,len(sys.argv))
 	if ( e == 0 ):
 		main(sys.argv[1]);
+
+
+
+
+"""
+				elif texte[d].split(' ')[0].isupper() and len(texte[d].split(' '))<4 :
+					
+					print("je passe par la")
+					trouverIntro = True
+				"""
